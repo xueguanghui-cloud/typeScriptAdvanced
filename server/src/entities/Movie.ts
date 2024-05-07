@@ -9,8 +9,9 @@ import {
   ValidationError,
   validate,
 } from "class-validator";
+import { BaseEntity } from "./BaseEntity";
 
-export class Movie {
+export class Movie extends BaseEntity {
   @IsNotEmpty({ message: "电影名称不可以为空" })
   @Type(() => String)
   public name: string;
@@ -53,30 +54,11 @@ export class Movie {
   public poster?: string;
 
   /**
-   * 验证当前电影对象
-   * @returns Promise<string[]>
-   */
-  public async validateThis(skipMissing = false): Promise<string[]> {
-    const errors = await validate(this, {
-      skipMissingProperties: skipMissing,
-    });
-    const temp = errors.map((error) => Object.values(error.constraints!));
-    const result: string[] = [];
-    temp.forEach((item) => {
-      result.push(...item);
-    });
-    return result;
-  }
-
-  /**
    * 将平面对象转换为 Movie 对象
    * @param plainObject 平面对象
-   * @returns Movie
+   * @returns
    */
-  public static transform(plainObject: object): Movie {
-    if (plainObject instanceof Movie) {
-      return plainObject;
-    }
-    return plainToClass(Movie, plainObject);
+  public static transform<T>(plainObject: object): Movie {
+    return super.baseTransform(Movie, plainObject);
   }
 }
