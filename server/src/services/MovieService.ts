@@ -30,8 +30,8 @@ export class MovieService {
     return [];
   }
 
-  public static async delete(id: string): Promise<void> {
-    await MovieModel.deleteOne({ _id: id });
+  public static async delete(id: string) {
+    return await MovieModel.deleteOne({ _id: id });
   }
 
   public static async findId(id: string): Promise<IMovie | null> {
