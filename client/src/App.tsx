@@ -1,12 +1,14 @@
+import React from "react";
 
-import './App.css';
+import "./App.css";
+import Layout from "./pages/Layout";
 
-function App() {
+const App: React.FC = function () {
   return (
     <div className="App">
-      Hello World
+      <Layout />
     </div>
   );
-}
+};
 
 export default App;

@@ -1,29 +1,12 @@
 import axios from "axios";
-import { IResponseError, IResponseSuccess } from "./CommonTypes";
-
-export interface IMovie {
-  _id?: string;
-  name: string;
-  types: string[];
-  areas: string[];
-  timeLong: number;
-  isHot: boolean;
-  isComing: boolean;
-  isClasic: boolean;
-  description?: string;
-  poster?: string;
-}
-
-export interface IDeleteResult {
-  acknowledged: boolean;
-  deletedCount: number;
-}
-
-export interface ISearchCondition {
-  page?: number;
-  imit?: number;
-  key?: string;
-}
+import {
+  IDeleteResult,
+  IMovie,
+  IPageData,
+  IResponseError,
+  IResponseSuccess,
+  ISearchCondition,
+} from "../redux/modules/types/CommonTypes";
 
 export class MovieService {
   /**
@@ -31,9 +14,7 @@ export class MovieService {
    * @param movie
    * @returns
    */
-  public static async add(
-    movie: IMovie
-  ): Promise<IResponseSuccess<IMovie> | IResponseError> {
+  public static async add(movie: IMovie): Promise<IResponseSuccess<IMovie> | IResponseError> {
     const { data } = await axios.post("/api/movie", movie);
     return data;
   }
@@ -43,10 +24,7 @@ export class MovieService {
    * @param id
    * @returns
    */
-  public static async edit(
-    id: string,
-    movie: IMovie
-  ): Promise<IResponseSuccess<true> | IResponseError> {
+  public static async edit(id: string, movie: Partial<IMovie>): Promise<IResponseSuccess<true> | IResponseError> {
     const { data } = await axios.put(`/api/movie/${id}`, movie);
     return data;
   }
@@ -56,9 +34,7 @@ export class MovieService {
    * @param id
    * @returns
    */
-  public static async delete(
-    id: string
-  ): Promise<IResponseSuccess<IDeleteResult> | null> {
+  public static async delete(id: string): Promise<IResponseSuccess<IDeleteResult> | null> {
     const { data } = await axios.delete(`/api/movie/${id}`);
     return data;
   }
@@ -78,9 +54,7 @@ export class MovieService {
    * @param id
    * @returns
    */
-  public static async getMovies(
-    condition: ISearchCondition
-  ): Promise<IResponseSuccess<IMovie[]> | null> {
+  public static async getMovies(condition: ISearchCondition): Promise<IPageData<IMovie> | null> {
     const { data } = await axios.get("/api/movie", {
       params: condition,
     });
