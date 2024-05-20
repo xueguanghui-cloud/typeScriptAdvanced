@@ -5,15 +5,18 @@ import { IMovie } from "../redux/modules/types/CommonTypes";
 import ImgUploader from "./ImgUploader";
 
 interface IProps {
+  movie?: IMovie;
   onSubmit: (movie: IMovie) => Promise<string | undefined>;
 }
 
 const MovieForm: React.FC<IProps> = memo(function MovieForm(props) {
   const { onSubmit } = props;
 
-  const onFinish = async (values: IMovie) => {
+  const onFinish = async (values: IMovie & { poster?: { url: string; uid: string; name: string } }) => {
     console.log("Received values of form: ", values);
-    const result = await onSubmit(values);
+
+    const params = { ...values, poster: values.poster?.url };
+    const result = await onSubmit(params);
     if (result) {
       message.error(result);
     } else {
@@ -44,6 +47,20 @@ const MovieForm: React.FC<IProps> = memo(function MovieForm(props) {
     isComing: [{ required: true, message: "请选择是否即将上映" }],
   };
 
+  const getDefaultField = (movie: IMovie): { name: string; value: any }[] => {
+    const result: { name: string; value: any }[] = [];
+    for (const key in movie) {
+      if (Object.prototype.hasOwnProperty.call(movie, key)) {
+        const obj = {
+          name: key,
+          value: movie[key as keyof IMovie],
+        };
+        result.push(obj);
+      }
+    }
+    return result;
+  };
+
   return (
     <Form
       labelCol={{ span: 4 }}
@@ -51,6 +68,7 @@ const MovieForm: React.FC<IProps> = memo(function MovieForm(props) {
       layout="horizontal"
       style={{ maxWidth: 600 }}
       onFinish={onFinish}
+      fields={props.movie ? getDefaultField(props.movie) : []}
     >
       <Form.Item label="电影名称" name="name" rules={formReuls.name}>
         <Input placeholder="请输入电影名称" />

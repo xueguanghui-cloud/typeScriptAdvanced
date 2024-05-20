@@ -44,7 +44,7 @@ export class MovieService {
    * @param id
    * @returns
    */
-  public static async getMovieById(id: string): Promise<IMovie | null> {
+  public static async getMovieById(id: string): Promise<IResponseSuccess<IMovie | null>> {
     const { data } = await axios.get(`/api/movie/${id}`);
     return data;
   }

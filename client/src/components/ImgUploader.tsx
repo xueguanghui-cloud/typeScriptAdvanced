@@ -20,7 +20,7 @@ interface IImgUploaderProps {
 }
 
 const ImgUploader: React.FC<IImgUploaderProps> = memo(function ImgUploader(props) {
-  const { value: defaultImg, onChange } = props;
+  const { value, onChange } = props;
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -67,12 +67,12 @@ const ImgUploader: React.FC<IImgUploaderProps> = memo(function ImgUploader(props
   );
 
   useEffect(() => {
-    if (defaultImg) {
-      setFileList([defaultImg]);
+    if (value) {
+      setFileList([value]);
     } else {
       setFileList([]);
     }
-  }, [defaultImg]);
+  }, [value]);
   return (
     <>
       <Upload
